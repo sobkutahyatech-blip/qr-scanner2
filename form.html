@@ -243,21 +243,28 @@
 
 <script>
   // ══════════════════════════════════════════
-  //  ✅ إعدادات — عدّل هذه القيم
+  //  ⚠️ ⚠️ ⚠️ هام جداً ⚠️ ⚠️ ⚠️
+  //  ضع هنا رابط Google Apps Script الذي حصلت عليه من النشر
+  //  انسخ الرابط من: Deploy → New deployment → Web app
   // ══════════════════════════════════════════
-  const CONFIG = {
-    SHEETS_URL:  localStorage.getItem('https://script.google.com/macros/s/AKfycbz03M0fFtPKK8jTuT66a_l_2sTy18Hrm6g-Of0y0RGsxs-C3VoFWO8WstqdrCzTr8OkUQ/exec') || '',
-    BANK_NAME:   'اسم صاحب الحساب',       // ← غيّر هنا
-    BANK_BANK:   'اسم البنك',              // ← غيّر هنا
-    BANK_IBAN:   'SA00 0000 0000 0000 0000 0000', // ← غيّر هنا
-    AMOUNT:      '000',                    // ← المبلغ بالريال
+  
+  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz03M0fFtPKK8jTuT66a_l_2sTy18Hrm6g-Of0y0RGsxs-C3VoFWO8WstqdrCzTr8OkUQ/exec'; // 🔴 ضع الرابط هنا بين علامتي التنصيص
+  
+  // ══════════════════════════════════════════
+  //  ✅ إعدادات البنك — عدّل هذه القيم حسب بياناتك
+  // ══════════════════════════════════════════
+  const BANK_CONFIG = {
+    BANK_NAME:   'أحمد محمد العلي',        // ← اسم صاحب الحساب
+    BANK_BANK:   'البنك الأهلي السعودي',    // ← اسم البنك
+    BANK_IBAN:   'SA4410000001234567891234', // ← رقم IBAN
+    AMOUNT:      '150',                      // ← المبلغ بالريال
   };
 
   // تعبئة بيانات البنك
-  document.getElementById('bankName').textContent   = CONFIG.BANK_NAME;
-  document.getElementById('bankBank').textContent   = CONFIG.BANK_BANK;
-  document.getElementById('bankIBAN').textContent   = CONFIG.BANK_IBAN;
-  document.getElementById('bankAmount').textContent = `المبلغ: ${CONFIG.AMOUNT} ريال`;
+  document.getElementById('bankName').textContent   = BANK_CONFIG.BANK_NAME;
+  document.getElementById('bankBank').textContent   = BANK_CONFIG.BANK_BANK;
+  document.getElementById('bankIBAN').textContent   = BANK_CONFIG.BANK_IBAN;
+  document.getElementById('bankAmount').textContent = `المبلغ: ${BANK_CONFIG.AMOUNT} ريال`;
 
   let gCount   = 0;
   let fileData = null; // base64
@@ -343,6 +350,12 @@
   function v(id) { return (document.getElementById(id)?.value || '').trim(); }
 
   async function submitForm() {
+    // التحقق من وجود الرابط
+    if (!SHEETS_URL) {
+      showMsg('err', '⚠️ لم يتم إعداد رابط Google Apps Script — يرجى إضافة الرابط في الكود');
+      return;
+    }
+    
     const fN   = v('fN'), lN = v('lN'), em = v('em');
     const sid  = v('sid'), ph = v('ph'), dept = v('dept'), yr = v('yr');
 
@@ -360,20 +373,18 @@
       guests.push({ name: gn, phone: gp });
     }
 
-    if (!CONFIG.SHEETS_URL)
-      return showMsg('err', '⚠️ لم يتم إعداد رابط Google Apps Script');
-
     setBusy(true);
     showMsg('info', '⏳ جارٍ رفع الإيصال وتسجيل البيانات...');
 
     try {
-      const res = await fetch(CONFIG.SHEETS_URL, {
+      const res = await fetch(SHEETS_URL, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'register',
           firstName: fN, lastName: lN, email: em,
           studentId: sid, phone: ph, dept, year: yr,
-          guests,
+          guests: guests,
           receipt: fileData   // base64 + mimeType + fileName
         })
       });
@@ -381,6 +392,7 @@
       if (data.success) showSuccess(em, data.qrCode, `${fN} ${lN}`, guests);
       else showMsg('err', '❌ ' + (data.msg || 'حدث خطأ'));
     } catch(e) {
+      console.error('Error:', e);
       showMsg('err', '❌ تعذر الاتصال — تحقق من الرابط');
     }
     setBusy(false);
@@ -401,9 +413,12 @@
 
   function showMsg(type, text) {
     const el = document.getElementById('msg');
-    el.className = 'msg ' + type; el.textContent = text;
+    el.className = 'msg ' + type; 
+    el.textContent = text;
+    el.style.display = 'flex';
     if (type !== 'info') setTimeout(() => el.style.display = 'none', 6000);
   }
+  
   function setBusy(on) {
     document.getElementById('subBtn').disabled = on;
     document.getElementById('subTxt').innerHTML = on

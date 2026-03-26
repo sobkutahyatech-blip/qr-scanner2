@@ -1,129 +1,132 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>تسجيل الخريجين — حفل التخرج 2025</title>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --gold:#C9A84C; --gold-l:#F0D080; --dark:#07070E;
       --card:#0E0E1A; --card2:#13131F; --border:#1C1C2E;
-      --text:#EEEEF8; --muted:#7070A0; --green:#1DB954; --red:#E63946;
+      --text:#EEEEF8; --muted:#7070A0;
+      --green:#1DB954; --red:#E63946; --blue:#3A86FF;
     }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;padding:2.5rem 1rem;}
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Tajawal',sans-serif; background:var(--dark); color:var(--text); min-height:100vh; padding:2.5rem 1rem; }
+    .wrap { max-width:660px; margin:0 auto; }
 
-    .wrap{max-width:640px;margin:0 auto;}
+    .logo { text-align:center; margin-bottom:2.5rem; }
+    .logo-icon { font-size:3.8rem; display:block; margin-bottom:.6rem; filter:drop-shadow(0 0 24px rgba(201,168,76,.5)); }
+    .logo h1 { font-size:1.9rem; font-weight:900; background:linear-gradient(135deg,#fff 20%,var(--gold) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .logo p { color:var(--muted); font-size:.9rem; margin-top:.3rem; }
 
-    /* ── Logo ── */
-    .logo{text-align:center;margin-bottom:2.5rem;}
-    .logo-icon{font-size:3.8rem;display:block;margin-bottom:.6rem;
-      filter:drop-shadow(0 0 24px rgba(201,168,76,.5));}
-    .logo h1{font-size:1.9rem;font-weight:900;
-      background:linear-gradient(135deg,#fff 20%,var(--gold) 100%);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .logo p{color:var(--muted);font-size:.9rem;margin-top:.3rem;}
+    .card { background:var(--card); border:1px solid var(--border); border-radius:20px; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,.55); }
+    .card-top { height:4px; background:linear-gradient(90deg,var(--gold),var(--gold-l),var(--gold)); }
 
-    /* ── Card ── */
-    .card{background:var(--card);border:1px solid var(--border);border-radius:20px;
-      overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.55);}
-    .card-top{height:4px;background:linear-gradient(90deg,var(--gold),var(--gold-l),var(--gold));}
+    .sec { padding:1.8rem 2rem; border-bottom:1px solid var(--border); }
+    .sec:last-child { border-bottom:none; }
+    .sec-title { font-size:.95rem; font-weight:700; color:var(--gold); margin-bottom:1.2rem; display:flex; align-items:center; gap:8px; }
 
-    /* ── Sections ── */
-    .sec{padding:1.8rem 2rem;border-bottom:1px solid var(--border);}
-    .sec:last-child{border-bottom:none;}
-    .sec-title{font-size:.95rem;font-weight:700;color:var(--gold);
-      margin-bottom:1.2rem;display:flex;align-items:center;gap:8px;}
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:.85rem; }
+    .full { grid-column:1/-1; }
+    .field { display:flex; flex-direction:column; gap:5px; }
+    label { font-size:.8rem; color:var(--muted); font-weight:600; letter-spacing:.3px; }
 
-    /* ── Fields ── */
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
-    .full{grid-column:1/-1;}
-    .field{display:flex;flex-direction:column;gap:5px;}
-    label{font-size:.8rem;color:var(--muted);font-weight:600;letter-spacing:.3px;}
-    input,select{
-      background:rgba(255,255,255,.04);border:1.5px solid var(--border);
-      border-radius:10px;padding:11px 13px;color:var(--text);
-      font-family:'Tajawal',sans-serif;font-size:.92rem;outline:none;transition:all .2s;
+    input, select {
+      background:rgba(255,255,255,.04); border:1.5px solid var(--border);
+      border-radius:10px; padding:11px 13px; color:var(--text);
+      font-family:'Tajawal',sans-serif; font-size:.92rem; outline:none; transition:all .2s;
     }
-    input:focus,select:focus{
-      border-color:var(--gold);background:rgba(201,168,76,.05);
-      box-shadow:0 0 0 3px rgba(201,168,76,.1);}
-    input::placeholder{color:#30304A;}
-    select option{background:#1a1a2e;}
+    input:focus, select:focus { border-color:var(--gold); background:rgba(201,168,76,.05); box-shadow:0 0 0 3px rgba(201,168,76,.1); }
+    input::placeholder { color:#30304A; }
+    select option { background:#1a1a2e; }
 
-    /* ── Guest count ── */
-    .count-row{display:flex;align-items:center;gap:1.2rem;margin-top:.5rem;}
-    .cnt-btn{
-      width:40px;height:40px;border-radius:50%;border:1.5px solid var(--border);
-      background:rgba(255,255,255,.04);color:var(--text);font-size:1.3rem;
-      cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;
+    /* ── بطاقة بيانات الدفع ── */
+    .payment-card {
+      background:rgba(201,168,76,.04); border:1.5px solid rgba(201,168,76,.25);
+      border-radius:14px; padding:1.4rem; margin-bottom:1.2rem;
     }
-    .cnt-btn:hover{border-color:var(--gold);background:rgba(201,168,76,.12);color:var(--gold);}
-    .cnt-num{font-size:2.2rem;font-weight:900;color:var(--gold);min-width:38px;text-align:center;}
-    .cnt-lbl{color:var(--muted);font-size:.82rem;}
-
-    /* ── Guest cards ── */
-    .guests{display:flex;flex-direction:column;gap:1rem;margin-top:1rem;}
-    .g-card{background:var(--card2);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
-    .g-head{
-      padding:.8rem 1.2rem;background:rgba(201,168,76,.06);
-      border-bottom:1px solid var(--border);
-      font-size:.86rem;font-weight:700;color:var(--gold-l);
-      display:flex;align-items:center;gap:8px;
-    }
-    .g-body{padding:1.1rem;display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
-
-    /* ── Submit ── */
-    .sub-btn{
-      width:100%;padding:14px;border-radius:12px;border:none;
+    .payment-title { font-size:.88rem; font-weight:700; color:var(--gold); margin-bottom:1rem; display:flex; align-items:center; gap:7px; }
+    .payment-row { display:flex; justify-content:space-between; align-items:center; padding:.5rem 0; border-bottom:1px solid rgba(255,255,255,.05); font-size:.88rem; }
+    .payment-row:last-child { border-bottom:none; }
+    .pr-label { color:var(--muted); }
+    .pr-val { color:var(--text); font-weight:600; font-family:monospace; }
+    .amount-badge {
       background:linear-gradient(135deg,var(--gold),var(--gold-l));
-      color:#000;font-family:'Tajawal',sans-serif;
-      font-size:1.05rem;font-weight:800;cursor:pointer;transition:all .2s;
-      display:flex;align-items:center;justify-content:center;gap:8px;
-    }
-    .sub-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(201,168,76,.4);}
-    .sub-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none;}
-
-    .msg{
-      padding:12px 16px;border-radius:10px;font-size:.88rem;
-      font-weight:600;display:none;align-items:center;gap:8px;margin-top:.9rem;
-    }
-    .msg.ok {display:flex;background:rgba(29,185,84,.1);border:1px solid rgba(29,185,84,.3);color:var(--green);}
-    .msg.err{display:flex;background:rgba(230,57,70,.1);border:1px solid rgba(230,57,70,.3);color:var(--red);}
-
-    /* ── Success ── */
-    .success{display:none;padding:2.5rem 2rem;text-align:center;}
-    .success.show{display:block;}
-    .s-icon{font-size:4rem;display:block;margin-bottom:1rem;animation:pop .5s ease;}
-    @keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.12)}100%{transform:scale(1)}}
-    .s-title{font-size:1.4rem;font-weight:900;color:var(--green);margin-bottom:.4rem;}
-    .s-sub{color:var(--muted);font-size:.88rem;margin-bottom:1.5rem;}
-    .qr-box{
-      background:rgba(201,168,76,.05);border:1.5px solid rgba(201,168,76,.25);
-      border-radius:14px;padding:1.3rem;margin-bottom:1.2rem;
-    }
-    .qr-lbl{font-size:.78rem;color:var(--muted);margin-bottom:.6rem;}
-    .qr-val{font-family:monospace;font-size:.78rem;color:var(--gold-l);word-break:break-all;letter-spacing:.5px;}
-    .summary{
-      text-align:right;background:var(--card2);border-radius:12px;
-      padding:1.1rem 1.3rem;font-size:.86rem;color:var(--muted);line-height:2.2;
-    }
-    .summary strong{color:var(--text);}
-    .note-box{
-      background:rgba(58,134,255,.06);border:1px solid rgba(58,134,255,.2);
-      border-radius:10px;padding:1rem;margin-top:1rem;
-      font-size:.82rem;color:#7aacff;line-height:1.8;text-align:right;
+      color:#000; font-weight:900; font-size:1.2rem;
+      padding:.5rem 1.2rem; border-radius:30px; display:inline-block; margin-top:.8rem;
     }
 
-    .spin{display:inline-block;width:18px;height:18px;
-      border:2px solid rgba(0,0,0,.25);border-top-color:#000;
-      border-radius:50%;animation:spin .8s linear infinite;}
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    @media(max-width:520px){
-      .grid,.g-body{grid-template-columns:1fr;}
-      .sec{padding:1.3rem 1rem;}
+    /* ── رفع الصورة ── */
+    .upload-zone {
+      border:2px dashed var(--border); border-radius:14px;
+      padding:2rem; text-align:center; cursor:pointer;
+      transition:all .3s; position:relative; overflow:hidden;
     }
+    .upload-zone:hover, .upload-zone.drag { border-color:var(--gold); background:rgba(201,168,76,.04); }
+    .upload-zone.has-file { border-color:var(--green); background:rgba(29,185,84,.04); }
+    .uz-icon { font-size:2.5rem; display:block; margin-bottom:.6rem; }
+    .uz-text { color:var(--muted); font-size:.88rem; line-height:1.7; }
+    .uz-text strong { color:var(--text); display:block; font-size:.95rem; margin-bottom:.3rem; }
+    #fileInput { position:absolute; inset:0; opacity:0; cursor:pointer; }
+
+    .file-preview {
+      display:none; align-items:center; gap:.8rem;
+      background:rgba(29,185,84,.06); border:1px solid rgba(29,185,84,.25);
+      border-radius:10px; padding:.8rem 1rem; margin-top:.8rem;
+    }
+    .file-preview.show { display:flex; }
+    .fp-img { width:48px; height:48px; border-radius:8px; object-fit:cover; border:1px solid var(--border); }
+    .fp-info { flex:1; }
+    .fp-name { font-size:.85rem; font-weight:600; color:var(--green); }
+    .fp-size { font-size:.75rem; color:var(--muted); margin-top:2px; }
+    .fp-remove { background:rgba(230,57,70,.1); border:1px solid rgba(230,57,70,.3); color:var(--red); border-radius:6px; padding:4px 10px; font-size:.78rem; cursor:pointer; font-family:'Tajawal',sans-serif; white-space:nowrap; }
+
+    /* ── count ── */
+    .count-row { display:flex; align-items:center; gap:1.2rem; margin-top:.5rem; }
+    .cnt-btn { width:40px; height:40px; border-radius:50%; border:1.5px solid var(--border); background:rgba(255,255,255,.04); color:var(--text); font-size:1.3rem; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; }
+    .cnt-btn:hover { border-color:var(--gold); background:rgba(201,168,76,.12); color:var(--gold); }
+    .cnt-num { font-size:2.2rem; font-weight:900; color:var(--gold); min-width:38px; text-align:center; }
+    .cnt-lbl { color:var(--muted); font-size:.82rem; }
+
+    .guests { display:flex; flex-direction:column; gap:1rem; margin-top:1rem; }
+    .g-card { background:var(--card2); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+    .g-head { padding:.8rem 1.2rem; background:rgba(201,168,76,.06); border-bottom:1px solid var(--border); font-size:.86rem; font-weight:700; color:var(--gold-l); display:flex; align-items:center; gap:8px; }
+    .g-body { padding:1.1rem; display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+
+    /* ── submit ── */
+    .sub-btn { width:100%; padding:14px; border-radius:12px; border:none; background:linear-gradient(135deg,var(--gold),var(--gold-l)); color:#000; font-family:'Tajawal',sans-serif; font-size:1.05rem; font-weight:800; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+    .sub-btn:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(201,168,76,.4); }
+    .sub-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
+
+    .msg { padding:12px 16px; border-radius:10px; font-size:.88rem; font-weight:600; display:none; align-items:center; gap:8px; margin-top:.9rem; }
+    .msg.ok  { display:flex; background:rgba(29,185,84,.1);  border:1px solid rgba(29,185,84,.3);  color:var(--green); }
+    .msg.err { display:flex; background:rgba(230,57,70,.1);  border:1px solid rgba(230,57,70,.3);  color:var(--red); }
+    .msg.info{ display:flex; background:rgba(58,134,255,.1); border:1px solid rgba(58,134,255,.3); color:var(--blue); }
+
+    /* ── success ── */
+    .success { display:none; padding:2.5rem 2rem; text-align:center; }
+    .success.show { display:block; }
+    .s-icon { font-size:4rem; display:block; margin-bottom:1rem; animation:pop .5s ease; }
+    @keyframes pop { 0%{transform:scale(0)} 80%{transform:scale(1.12)} 100%{transform:scale(1)} }
+    .s-title { font-size:1.4rem; font-weight:900; color:var(--green); margin-bottom:.4rem; }
+    .s-sub { color:var(--muted); font-size:.88rem; margin-bottom:1.5rem; }
+    .qr-box { background:rgba(201,168,76,.05); border:1.5px solid rgba(201,168,76,.25); border-radius:14px; padding:1.3rem; margin-bottom:1.2rem; }
+    .qr-lbl { font-size:.78rem; color:var(--muted); margin-bottom:.6rem; }
+    .qr-val { font-family:monospace; font-size:.78rem; color:var(--gold-l); word-break:break-all; letter-spacing:.5px; }
+    .summary { text-align:right; background:var(--card2); border-radius:12px; padding:1.1rem 1.3rem; font-size:.86rem; color:var(--muted); line-height:2.2; }
+    .summary strong { color:var(--text); }
+
+    /* progress */
+    .upload-progress { height:4px; background:var(--border); border-radius:2px; margin-top:.8rem; overflow:hidden; display:none; }
+    .upload-progress.show { display:block; }
+    .progress-bar { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-l)); border-radius:2px; transition:width .3s; width:0%; }
+
+    .spin { display:inline-block; width:18px; height:18px; border:2px solid rgba(0,0,0,.25); border-top-color:#000; border-radius:50%; animation:spin .8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    @media(max-width:520px) { .grid, .g-body { grid-template-columns:1fr; } .sec { padding:1.3rem 1rem; } }
   </style>
 </head>
 <body>
@@ -132,31 +135,31 @@
   <div class="logo">
     <span class="logo-icon">🎓</span>
     <h1>حفل التخرج 2025</h1>
-    <p>سجّل بياناتك وبيانات ضيوفك — ستصلك بطاقة دخول QR على إيميلك</p>
+    <p>سجّل بياناتك وارفع إيصال الدفع للحصول على بطاقة الدخول</p>
   </div>
 
   <div class="card">
     <div class="card-top"></div>
 
-    <!-- ── شاشة النجاح ── -->
+    <!-- نجاح -->
     <div class="success" id="successScreen">
       <span class="s-icon">🎉</span>
       <div class="s-title">تم التسجيل بنجاح!</div>
       <div class="s-sub" id="sEmail">—</div>
       <div class="qr-box">
-        <div class="qr-lbl">🔑 رمز QR الخاص بك (رمز واحد لك وللضيوف)</div>
+        <div class="qr-lbl">🔑 رمز QR الخاص بك</div>
         <div class="qr-val" id="sQR">—</div>
       </div>
       <div class="summary" id="sSummary"></div>
-      <div class="note-box">
-        ℹ️ يوم الحفل: أول مسح = دخولك أنت، كل مسح بعده = ضيف بالترتيب وسيظهر اسمه على الشاشة للتحقق
-      </div>
+      <p style="color:var(--muted);font-size:.8rem;margin-top:1rem;">
+        ⚠️ يوم الحفل: أول مسح = دخولك، المسحات التالية = ستختار من الضيوف من حضر
+      </p>
     </div>
 
-    <!-- ── النموذج ── -->
+    <!-- نموذج -->
     <div id="formWrap">
 
-      <!-- بيانات الخريج -->
+      <!-- 1. بيانات الخريج -->
       <div class="sec">
         <div class="sec-title">👤 بيانات الخريج</div>
         <div class="grid">
@@ -167,86 +170,171 @@
           <div class="field"><label>رقم الجوال *</label><input id="ph" type="tel" placeholder="05XXXXXXXX"></div>
           <div class="field"><label>الكلية / القسم *</label><input id="dept" placeholder="علوم الحاسوب"></div>
           <div class="field"><label>سنة التخرج *</label>
-            <select id="yr">
-              <option value="">اختر</option>
-              <option>2025</option><option>2024</option><option>2023</option>
-            </select>
+            <select id="yr"><option value="">اختر</option><option>2025</option><option>2024</option><option>2023</option></select>
           </div>
         </div>
       </div>
 
-      <!-- عدد الضيوف -->
+      <!-- 2. الدفع -->
+      <div class="sec">
+        <div class="sec-title">💳 رسوم الحفل</div>
+
+        <!-- ══ بيانات الحساب البنكي ══ -->
+        <div class="payment-card">
+          <div class="payment-title">🏦 بيانات التحويل</div>
+          <div class="payment-row"><span class="pr-label">اسم صاحب الحساب</span><span class="pr-val" id="bankName">— ضع اسمك هنا —</span></div>
+          <div class="payment-row"><span class="pr-label">البنك</span><span class="pr-val" id="bankBank">— اسم البنك —</span></div>
+          <div class="payment-row"><span class="pr-label">رقم IBAN</span><span class="pr-val" id="bankIBAN">SA00 0000 0000 0000 0000 0000</span></div>
+          <div style="text-align:center; margin-top:.8rem;">
+            <div class="amount-badge" id="bankAmount">المبلغ: 000 ريال</div>
+          </div>
+        </div>
+
+        <!-- رفع الإيصال -->
+        <div class="field">
+          <label>إيصال التحويل (صورة) *</label>
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="fileInput" accept="image/*,.pdf" onchange="handleFile(this)">
+            <span class="uz-icon">📎</span>
+            <div class="uz-text">
+              <strong>اضغط لرفع إيصال الدفع</strong>
+              صورة أو PDF — الحد الأقصى 10 MB
+            </div>
+          </div>
+          <div class="upload-progress" id="uploadProgress"><div class="progress-bar" id="progressBar"></div></div>
+          <div class="file-preview" id="filePreview">
+            <img id="fpImg" class="fp-img" src="" alt="">
+            <div class="fp-info">
+              <div class="fp-name" id="fpName">—</div>
+              <div class="fp-size" id="fpSize">—</div>
+            </div>
+            <button class="fp-remove" onclick="removeFile()">✕ إزالة</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. الضيوف -->
       <div class="sec">
         <div class="sec-title">👥 عدد الضيوف المرافقين</div>
-        <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem;">
-          الرمز يُستخدم عدد محدد من المرات — أنت + ضيوفك فقط، لا يمكن الزيادة لاحقاً
-        </p>
+        <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem;">يوم الحفل ستختار من الضيوف من حضر في كل مسح — الحد الأقصى 5 ضيوف</p>
         <div class="count-row">
           <button class="cnt-btn" onclick="changeCount(-1)">−</button>
-          <div>
-            <div class="cnt-num" id="cntNum">0</div>
-            <div class="cnt-lbl">ضيف</div>
-          </div>
+          <div><div class="cnt-num" id="cntNum">0</div><div class="cnt-lbl">ضيف</div></div>
           <button class="cnt-btn" onclick="changeCount(1)">+</button>
-          <span style="color:var(--muted);font-size:.8rem;">الحد الأقصى 5 ضيوف</span>
         </div>
       </div>
 
-      <!-- بيانات الضيوف (ديناميكية) -->
       <div class="sec" id="guestsSec" style="display:none;">
         <div class="sec-title">📋 بيانات الضيوف</div>
         <div class="guests" id="guestsWrap"></div>
       </div>
 
-      <!-- زر الإرسال -->
+      <!-- 4. إرسال -->
       <div class="sec">
         <button class="sub-btn" id="subBtn" onclick="submitForm()">
-          <span id="subTxt">📩 تسجيل وإرسال بطاقة الدخول</span>
+          <span id="subTxt">📩 إرسال التسجيل</span>
         </button>
         <div class="msg" id="msg"></div>
       </div>
 
-    </div><!-- /formWrap -->
-  </div><!-- /card -->
+    </div>
+  </div>
 </div>
 
 <script>
-  // ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️
-  // 🔴 هام جداً: ضع هنا رابط Google Apps Script الذي حصلت عليه بعد النشر
-  // انسخ الرابط من: Deploy → New deployment → Web app
-  // مثال: https://script.google.com/macros/s/AKfycbxxxxxx/exec
-  // ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️
-  
-  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz03M0fFtPKK8jTuT66a_l_2sTy18Hrm6g-Of0y0RGsxs-C3VoFWO8WstqdrCzTr8OkUQ/exec'; // 🔴 اكتب الرابط هنا بين علامتي التنصيص
+  // ══════════════════════════════════════════
+  //  ✅ إعدادات — عدّل هذه القيم
+  // ══════════════════════════════════════════
+  const CONFIG = {
+    SHEETS_URL:  localStorage.getItem('https://script.google.com/macros/s/AKfycbz03M0fFtPKK8jTuT66a_l_2sTy18Hrm6g-Of0y0RGsxs-C3VoFWO8WstqdrCzTr8OkUQ/exec') || '',
+    BANK_NAME:   'اسم صاحب الحساب',       // ← غيّر هنا
+    BANK_BANK:   'اسم البنك',              // ← غيّر هنا
+    BANK_IBAN:   'SA00 0000 0000 0000 0000 0000', // ← غيّر هنا
+    AMOUNT:      '000',                    // ← المبلغ بالريال
+  };
 
-  let gCount = 0;
+  // تعبئة بيانات البنك
+  document.getElementById('bankName').textContent   = CONFIG.BANK_NAME;
+  document.getElementById('bankBank').textContent   = CONFIG.BANK_BANK;
+  document.getElementById('bankIBAN').textContent   = CONFIG.BANK_IBAN;
+  document.getElementById('bankAmount').textContent = `المبلغ: ${CONFIG.AMOUNT} ريال`;
 
+  let gCount   = 0;
+  let fileData = null; // base64
+
+  // ── Drag & Drop ──
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('drag');
+    if (e.dataTransfer.files[0]) handleFile({ files: e.dataTransfer.files });
+  });
+
+  function handleFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) return showMsg('err', '⚠️ الملف أكبر من 10 MB');
+
+    // Preview
+    const prev = document.getElementById('filePreview');
+    document.getElementById('fpName').textContent = file.name;
+    document.getElementById('fpSize').textContent = (file.size / 1024).toFixed(0) + ' KB';
+    if (file.type.startsWith('image/')) {
+      const url = URL.createObjectURL(file);
+      document.getElementById('fpImg').src = url;
+      document.getElementById('fpImg').style.display = 'block';
+    } else {
+      document.getElementById('fpImg').style.display = 'none';
+    }
+    prev.classList.add('show');
+    zone.classList.add('has-file');
+
+    // Convert to base64
+    const progress = document.getElementById('uploadProgress');
+    const bar      = document.getElementById('progressBar');
+    progress.classList.add('show');
+    bar.style.width = '0%';
+
+    const reader = new FileReader();
+    reader.onprogress = e => { if (e.lengthComputable) bar.style.width = Math.round(e.loaded/e.total*80) + '%'; };
+    reader.onload = e => {
+      bar.style.width = '100%';
+      setTimeout(() => progress.classList.remove('show'), 600);
+      fileData = {
+        base64: e.target.result.split(',')[1],
+        mimeType: file.type || 'image/jpeg',
+        fileName: file.name
+      };
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeFile() {
+    fileData = null;
+    document.getElementById('filePreview').classList.remove('show');
+    document.getElementById('uploadZone').classList.remove('has-file');
+    document.getElementById('fileInput').value = '';
+  }
+
+  // ── Guest Count ──
   function changeCount(delta) {
-    const next = gCount + delta;
-    if (next < 0 || next > 5) return;
-    gCount = next;
-    document.getElementById('cntNum').textContent = next;
-
+    const n = gCount + delta;
+    if (n < 0 || n > 5) return;
+    gCount = n;
+    document.getElementById('cntNum').textContent = n;
     const sec  = document.getElementById('guestsSec');
     const wrap = document.getElementById('guestsWrap');
-
-    if (!next) { sec.style.display = 'none'; wrap.innerHTML = ''; return; }
-
+    if (!n) { sec.style.display = 'none'; wrap.innerHTML = ''; return; }
     sec.style.display = 'block';
     wrap.innerHTML = '';
-    for (let i = 1; i <= next; i++) {
+    for (let i = 1; i <= n; i++) {
       wrap.innerHTML += `
         <div class="g-card">
           <div class="g-head">👤 الضيف ${i}</div>
           <div class="g-body">
-            <div class="field">
-              <label>الاسم الكامل *</label>
-              <input id="g${i}n" placeholder="اسم الضيف الكامل">
-            </div>
-            <div class="field">
-              <label>رقم الجوال *</label>
-              <input id="g${i}p" type="tel" placeholder="05XXXXXXXX">
-            </div>
+            <div class="field"><label>الاسم الكامل *</label><input id="g${i}n" placeholder="اسم الضيف الكامل"></div>
+            <div class="field"><label>رقم الجوال *</label><input id="g${i}p" type="tel" placeholder="05XXXXXXXX"></div>
           </div>
         </div>`;
     }
@@ -255,96 +343,72 @@
   function v(id) { return (document.getElementById(id)?.value || '').trim(); }
 
   async function submitForm() {
-    // التحقق من وجود الرابط
-    if (!SHEETS_URL) {
-      showMsg('err', '⚠️ لم يتم إعداد رابط Google Apps Script — يرجى إضافة الرابط في الكود');
-      return;
-    }
-
-    // التحقق من بيانات الخريج
-    const fN = v('fN'), lN = v('lN'), em = v('em'),
-          sid = v('sid'), ph = v('ph'), dept = v('dept'), yr = v('yr');
+    const fN   = v('fN'), lN = v('lN'), em = v('em');
+    const sid  = v('sid'), ph = v('ph'), dept = v('dept'), yr = v('yr');
 
     if (!fN || !lN || !em || !sid || !ph || !dept || !yr)
       return showMsg('err', '⚠️ يرجى ملء جميع بيانات الخريج');
     if (!em.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
       return showMsg('err', '⚠️ البريد الإلكتروني غير صحيح');
+    if (!fileData)
+      return showMsg('err', '⚠️ يرجى رفع إيصال الدفع أولاً');
 
-    // التحقق من بيانات الضيوف
     const guests = [];
     for (let i = 1; i <= gCount; i++) {
       const gn = v(`g${i}n`), gp = v(`g${i}p`);
-      if (!gn || !gp)
-        return showMsg('err', `⚠️ أكمل بيانات الضيف ${i} (الاسم + الجوال)`);
+      if (!gn || !gp) return showMsg('err', `⚠️ أكمل بيانات الضيف ${i}`);
       guests.push({ name: gn, phone: gp });
     }
 
-    setBusy(true);
-    try {
-      // إرسال البيانات بالصيغة التي يتوقعها السكريبت
-      const payload = {
-        action: 'register',
-        firstName: fN,
-        lastName: lN,
-        email: em,
-        studentId: sid,
-        phone: ph,
-        dept: dept,
-        year: yr,
-        guests: guests
-      };
+    if (!CONFIG.SHEETS_URL)
+      return showMsg('err', '⚠️ لم يتم إعداد رابط Google Apps Script');
 
-      const res = await fetch(SHEETS_URL, {
+    setBusy(true);
+    showMsg('info', '⏳ جارٍ رفع الإيصال وتسجيل البيانات...');
+
+    try {
+      const res = await fetch(CONFIG.SHEETS_URL, {
         method: 'POST',
-        mode: 'no-cors', // هذا مهم لتجنب مشاكل CORS
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          action: 'register',
+          firstName: fN, lastName: lN, email: em,
+          studentId: sid, phone: ph, dept, year: yr,
+          guests,
+          receipt: fileData   // base64 + mimeType + fileName
+        })
       });
-      
-      // ملاحظة: بسبب mode: 'no-cors'، لا يمكن قراءة الاستجابة بشكل مباشر
-      // لذلك سنفترض أن العملية نجحت، ولكن يجب التحقق من الورقة للتأكد
-      
-      // طريقة بديلة: استخدام POST عادي مع قراءة الاستجابة
-      // لكن بما أن السكريبت يعمل، سنستخدم هذه الطريقة:
-      
-      showMsg('ok', '✅ تم إرسال طلب التسجيل بنجاح! سيصلك إيميل تأكيد خلال دقائق.');
-      
-      // عرض شاشة النجاح بشكل مبسط
-      document.getElementById('formWrap').style.display = 'none';
-      document.getElementById('sEmail').textContent = `تم إرسال رمز QR إلى ${em}`;
-      document.getElementById('sQR').textContent = `GRAD_${sid}_${Date.now()}`;
-      
-      let html = `<strong>الخريج:</strong> ${fN} ${lN}<br>`;
-      html += `<strong>إجمالي الدخول المسموح:</strong> ${1 + guests.length}`;
-      if (guests.length) {
-        html += `<br><br><strong>الضيوف المسجلون:</strong><br>`;
-        guests.forEach((g, i) => {
-          html += `&nbsp;&nbsp;${i + 1}. ${g.name} — 📱 ${g.phone}<br>`;
-        });
-      }
-      document.getElementById('sSummary').innerHTML = html;
-      document.getElementById('successScreen').classList.add('show');
-      
+      const data = await res.json();
+      if (data.success) showSuccess(em, data.qrCode, `${fN} ${lN}`, guests);
+      else showMsg('err', '❌ ' + (data.msg || 'حدث خطأ'));
     } catch(e) {
-      console.error('Error:', e);
-      showMsg('err', '❌ تعذر الاتصال — تحقق من رابط Google Apps Script');
+      showMsg('err', '❌ تعذر الاتصال — تحقق من الرابط');
     }
     setBusy(false);
   }
 
-  function showMsg(type, text) {
-    const el = document.getElementById('msg');
-    el.className = 'msg ' + type;
-    el.textContent = text;
-    el.style.display = 'flex';
-    setTimeout(() => el.style.display = 'none', 6000);
+  function showSuccess(email, qr, name, guests) {
+    document.getElementById('formWrap').style.display = 'none';
+    document.getElementById('sEmail').textContent = `تم إرسال رمز QR إلى ${email}`;
+    document.getElementById('sQR').textContent = qr;
+    let html = `<strong>الخريج:</strong> ${name}<br><strong>إجمالي الدخول المسموح:</strong> ${1 + guests.length}`;
+    if (guests.length) {
+      html += `<br><br><strong>الضيوف:</strong><br>`;
+      guests.forEach((g, i) => { html += `&nbsp;&nbsp;${i+1}. ${g.name} — 📱 ${g.phone}<br>`; });
+    }
+    document.getElementById('sSummary').innerHTML = html;
+    document.getElementById('successScreen').classList.add('show');
   }
 
+  function showMsg(type, text) {
+    const el = document.getElementById('msg');
+    el.className = 'msg ' + type; el.textContent = text;
+    if (type !== 'info') setTimeout(() => el.style.display = 'none', 6000);
+  }
   function setBusy(on) {
     document.getElementById('subBtn').disabled = on;
     document.getElementById('subTxt').innerHTML = on
       ? '<span class="spin"></span> جارٍ التسجيل...'
-      : '📩 تسجيل وإرسال بطاقة الدخول';
+      : '📩 إرسال التسجيل';
   }
 </script>
 </body>

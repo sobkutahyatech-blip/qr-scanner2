@@ -208,6 +208,7 @@ input::placeholder{color:#252540;}
 
 <div class="tabs">
   <button class="tab active" onclick="sw('att',this)">📷 الحضور</button>
+  <button class="tab" onclick="sw('manual',this)">✍️ إدخال يدوي</button>
   <button class="tab" onclick="sw('grads',this)">🎓 الخريجون</button>
   <button class="tab" onclick="sw('guests',this)">👥 المرافقون</button>
   <button class="tab" onclick="sw('pay',this)">💳 الإيصالات</button>
@@ -287,6 +288,69 @@ input::placeholder{color:#252540;}
           <table>
             <thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>تابع لـ</th><th>وقت الدخول</th></tr></thead>
             <tbody id="attTb"><tr><td colspan="5"><div class="empty">⏳ بانتظار البيانات</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ الإدخال اليدوي ══ -->
+  <div class="tp" id="tp-manual">
+    <div style="max-width:620px;margin:0 auto;">
+
+      <!-- بطاقة الإدخال اليدوي -->
+      <div class="panel" style="margin-bottom:1rem;">
+        <div class="ph">
+          <h3>✍️ القراءة اليدوية</h3>
+          <span style="font-size:.7rem;color:var(--muted)">عند تعذّر قراءة QR بالجهاز أو الكاميرا</span>
+        </div>
+        <div class="pb">
+
+          <p style="color:var(--muted);font-size:.83rem;margin-bottom:1rem;line-height:1.7;">
+            أدخل رمز QR يدوياً أو ابحث باسم الخريج لإيجاده وتأكيد حضوره.
+          </p>
+
+          <!-- البحث بالاسم أو QR -->
+          <div style="display:flex;gap:8px;margin-bottom:1rem;">
+            <input type="text" id="manualSearchInput"
+              placeholder="ابحث باسم الخريج أو رقم طالبه أو الصق رمز QR..."
+              style="flex:1"
+              oninput="manualSearch()"
+              onkeydown="if(event.key==='Enter')manualSearch()">
+            <button class="btn btn-g" onclick="manualSearch()">🔍 بحث</button>
+          </div>
+
+          <!-- نتائج البحث -->
+          <div id="manualSearchResults"></div>
+
+          <!-- بطاقة الشخص المختار -->
+          <div id="manualSelectedCard" style="display:none;margin-top:1rem;">
+            <div style="background:rgba(201,168,76,.06);border:1.5px solid rgba(201,168,76,.3);border-radius:12px;overflow:hidden;">
+              <div style="padding:.8rem 1rem;background:rgba(201,168,76,.08);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:.84rem;font-weight:700;color:var(--gold-l);">✅ الخريج المختار</span>
+                <button class="btn" onclick="clearManualSelection()" style="padding:4px 10px;font-size:.74rem;">✕ إلغاء</button>
+              </div>
+              <div style="padding:1rem;" id="manualCardBody"></div>
+            </div>
+
+            <!-- قائمة الحاضرين لهذا QR -->
+            <div style="margin-top:.8rem;" id="manualPersonList"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- سجل القراءات اليدوية -->
+      <div class="tbl-panel">
+        <div class="tbl-bar">
+          <span style="font-size:.82rem;font-weight:600;color:var(--text);">سجل الإدخالات اليدوية</span>
+          <span class="cnt-bdg" id="manualLogCnt">0</span>
+        </div>
+        <div class="tbl-wrap" style="max-height:300px;">
+          <table>
+            <thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>تابع لـ</th><th>وقت التسجيل</th></tr></thead>
+            <tbody id="manualLogTb"><tr><td colspan="5"><div class="empty">لا توجد إدخالات يدوية بعد</div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -399,6 +463,10 @@ function sw(name, el) {
   el.classList.add('active');
   if (name === 'att') {
     setTimeout(() => { if (scanMode === 'usb') focusScan(); }, 100);
+  }
+  if (name === 'manual') {
+    // تأكد من تحميل البيانات
+    if (!allGrads.length) loadAll();
   }
 }
 
@@ -893,7 +961,220 @@ function toast(msg, type) {
   t._timer = setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// ══ INIT ══
+// ══════════════════════════════════════════════════
+//  القراءة اليدوية
+// ══════════════════════════════════════════════════
+let manualLog = []; // سجل محلي للإدخالات اليدوية
+let manualSelectedQR   = null;
+let manualSelectedData = null;
+
+function manualSearch() {
+  const q = document.getElementById('manualSearchInput').value.trim();
+  if (!q) return;
+  const res = document.getElementById('manualSearchResults');
+
+  // بحث في البيانات المحملة
+  let found = [];
+
+  // بحث بالاسم أو رقم الطالب في allGrads
+  const lq = q.toLowerCase();
+  found = allGrads.filter(r =>
+    (r[1]||'').toLowerCase().includes(lq) ||
+    (r[0]||'').toString().toLowerCase().includes(lq) ||
+    (r[6]||'').toLowerCase().includes(lq)  // QR code
+  );
+
+  if (!found.length) {
+    res.innerHTML = '<div style="background:rgba(230,57,70,.08);border:1px solid rgba(230,57,70,.25);border-radius:8px;padding:.8rem;color:var(--red);font-size:.83rem;">❌ لم يُعثر على نتائج — تأكد من الاسم أو رقم الطالب أو رمز QR</div>';
+    return;
+  }
+
+  res.innerHTML = found.slice(0, 5).map((r, i) => `
+    <div onclick="selectManualGrad('${esc(r[6])}')"
+      style="background:rgba(255,255,255,.03);border:1.5px solid var(--border);border-radius:9px;
+             padding:.8rem 1rem;margin-bottom:.5rem;cursor:pointer;transition:all .15s;"
+      onmouseover="this.style.borderColor='var(--gold)';this.style.background='rgba(201,168,76,.05)'"
+      onmouseout="this.style.borderColor='var(--border)';this.style.background='rgba(255,255,255,.03)'">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:.88rem;font-weight:700">${r[1]||'—'}</div>
+          <div style="font-size:.74rem;color:var(--muted);margin-top:2px">
+            رقم الطالب: ${r[0]||'—'} | ${r[4]||'—'} | ${r[5]||'—'}
+          </div>
+        </div>
+        <span style="font-size:.74rem;color:var(--gold);background:rgba(201,168,76,.1);padding:3px 9px;border-radius:8px">اختر</span>
+      </div>
+    </div>`).join('');
+}
+
+async function selectManualGrad(qrCode) {
+  if (!URL_) { toast('⚠️ ضع الرابط في الإعدادات','warn'); return; }
+
+  document.getElementById('manualSearchResults').innerHTML = '<div style="color:var(--muted);font-size:.8rem;padding:.5rem">⏳ جارٍ جلب البيانات...</div>';
+
+  try {
+    const res = await post({ action:'attend', qrCode });
+    if (!res.success) {
+      document.getElementById('manualSearchResults').innerHTML =
+        '<div style="color:var(--red);font-size:.82rem;padding:.5rem">❌ ' + (res.msg||'خطأ') + '</div>';
+      return;
+    }
+
+    manualSelectedQR   = qrCode;
+    manualSelectedData = res;
+    document.getElementById('manualSearchResults').innerHTML = '';
+    document.getElementById('manualSearchInput').value = '';
+
+    // عرض بطاقة الخريج
+    const card = document.getElementById('manualCardBody');
+    card.innerHTML =
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;font-size:.82rem;">' +
+      '<div><span style="color:var(--muted)">الاسم: </span><strong>' + res.graduateName + '</strong></div>' +
+      '<div><span style="color:var(--muted)">رقم الطالب: </span><strong>' + res.studentId + '</strong></div>' +
+      '<div><span style="color:var(--muted)">الكلية: </span><strong>' + (res.dept||'—') + '</strong></div>' +
+      '</div>';
+
+    document.getElementById('manualSelectedCard').style.display = 'block';
+    buildManualPersonList(res);
+  } catch(e) {
+    document.getElementById('manualSearchResults').innerHTML =
+      '<div style="color:var(--red);font-size:.82rem;padding:.5rem">❌ ' + e.message + '</div>';
+  }
+}
+
+function buildManualPersonList(data) {
+  const list = document.getElementById('manualPersonList');
+  let html = '<div style="font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:.6rem">اختر من تريد تسجيل حضوره:</div>';
+
+  // الخريج
+  html += manualPersonRow(data.gradAttended, 'graduate', -1,
+    '🎓 الخريج', data.graduateName,
+    'رقم الطالب: ' + data.studentId);
+
+  // الضيوف
+  if (data.guests && data.guests.length) {
+    data.guests.forEach(g => {
+      html += manualPersonRow(g.attended, 'guest', g.index,
+        '👤 مرافق', g.name, '📱 ' + (g.phone||'—'));
+    });
+  }
+
+  list.innerHTML = html;
+}
+
+function manualPersonRow(isDone, type, idx, badge, name, sub) {
+  const btnId = 'mbtn_' + idx;
+  return `
+    <div style="display:flex;align-items:center;gap:10px;border-radius:9px;
+                padding:.7rem .9rem;margin-bottom:.45rem;
+                border:1.5px solid ${isDone?'rgba(80,80,120,.3)':(type==='graduate'?'rgba(29,185,84,.3)':'rgba(255,149,0,.25)')};
+                background:${isDone?'rgba(0,0,0,.15)':(type==='graduate'?'rgba(29,185,84,.04)':'rgba(255,149,0,.03)')};
+                opacity:${isDone?.6:1};">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:.62rem;font-weight:800;padding:2px 6px;border-radius:6px;display:inline-block;margin-bottom:3px;
+                    background:${isDone?'rgba(80,80,120,.15)':(type==='graduate'?'rgba(29,185,84,.15)':'rgba(255,149,0,.15)')};
+                    color:${isDone?'var(--muted)':(type==='graduate'?'var(--green)':'var(--orange)')}">
+          ${isDone?'✅ دخل مسبقاً':badge}
+        </div>
+        <div style="font-size:.88rem;font-weight:700;color:${isDone?'var(--muted)':'var(--text)'}">${name}</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:1px">${sub}</div>
+      </div>
+      ${isDone
+        ? '<span style="font-size:.73rem;color:var(--muted);white-space:nowrap">✅ دخل</span>'
+        : `<button id="${btnId}" class="confirm-btn"
+             onclick="confirmManualPerson('${type}',${idx},'${esc(name)}')"
+             style="font-size:.78rem;padding:7px 14px;">
+             ✅ تأكيد يدوي
+           </button>`
+      }
+    </div>`;
+}
+
+async function confirmManualPerson(type, guestIndex, name) {
+  if (!manualSelectedQR) return;
+
+  const btnId = 'mbtn_' + guestIndex;
+  const btn   = document.getElementById(btnId);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
+
+  const payload = { action:'confirmAttendee', qrCode:manualSelectedQR, personType:type };
+  if (type === 'guest') payload.guestIndex = guestIndex;
+
+  try {
+    const res = await post(payload);
+    if (res.success) {
+      toast('✅ تم تسجيل دخول: ' + name, 'ok');
+
+      // إضافة لسجل اليدوي
+      const now = new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
+      manualLog.unshift({ name, type, related: type==='guest'?manualSelectedData.graduateName:'', time: now });
+      renderManualLog();
+
+      // تحديث الإحصائيات
+      if (type==='graduate') incrementStat('sGrad');
+      else incrementStat('sGuest');
+
+      // إضافة للجدول
+      addEntryToTable(name, type, type==='guest'?manualSelectedData.graduateName:'');
+
+      // إعادة بناء القائمة لتحديث حالة الزر
+      await refreshManualState();
+
+      setTimeout(loadAll, 2000);
+    } else {
+      toast('❌ '+(res.msg||'خطأ'),'err');
+      if (btn) { btn.disabled=false; btn.textContent='✅ تأكيد يدوي'; }
+    }
+  } catch(e) {
+    toast('❌ خطأ في الاتصال','err');
+    if (btn) { btn.disabled=false; btn.textContent='✅ تأكيد يدوي'; }
+  }
+}
+
+async function refreshManualState() {
+  if (!manualSelectedQR) return;
+  try {
+    const res = await post({ action:'attend', qrCode:manualSelectedQR });
+    if (res.success && res.type==='select_attendee') {
+      manualSelectedData = res;
+      buildManualPersonList(res);
+    } else {
+      // الجميع دخل
+      document.getElementById('manualPersonList').innerHTML =
+        '<div style="background:rgba(29,185,84,.08);border:1px solid rgba(29,185,84,.25);border-radius:8px;padding:.8rem;color:var(--green);font-size:.83rem;text-align:center;">✅ جميع الأشخاص المسجلين دخلوا الحفل</div>';
+    }
+  } catch(e) {}
+}
+
+function clearManualSelection() {
+  manualSelectedQR   = null;
+  manualSelectedData = null;
+  document.getElementById('manualSelectedCard').style.display = 'none';
+  document.getElementById('manualPersonList').innerHTML = '';
+  document.getElementById('manualSearchInput').value = '';
+  document.getElementById('manualSearchResults').innerHTML = '';
+}
+
+function renderManualLog() {
+  const cnt = document.getElementById('manualLogCnt');
+  const tb  = document.getElementById('manualLogTb');
+  if (cnt) cnt.textContent = manualLog.length + ' سجل';
+  if (!manualLog.length) {
+    tb.innerHTML = '<tr><td colspan="5"><div class="empty">لا توجد إدخالات يدوية بعد</div></td></tr>';
+    return;
+  }
+  tb.innerHTML = manualLog.map((e, i) => `
+    <tr>
+      <td class="rn">${i+1}</td>
+      <td><strong>${e.name}</strong></td>
+      <td>${e.type==='graduate'?'<span class="tg">🎓 خريج</span>':'<span class="tgu">👤 ضيف</span>'}</td>
+      <td style="font-size:.72rem;color:var(--muted)">${e.related||'—'}</td>
+      <td style="font-size:.7rem;color:var(--muted)">${e.time}</td>
+    </tr>`).join('');
+}
+
+// ══════════════════════════════════════════════════
+
 window.onload = () => {
   if (URL_) loadAll();
   setMode('usb');
